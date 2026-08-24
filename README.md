@@ -2,6 +2,15 @@
 
 A full-stack apartment/residential society maintenance complaint management system built with Next.js 14, TypeScript, Prisma, and PostgreSQL.
 
+## 🌐 Live Demo
+
+**[https://soc-manager.netlify.app](https://soc-manager.netlify.app)**
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@greenparkresidency.com | Admin@123 |
+| Resident | priya.sharma@email.com | Resident@123 |
+
 ---
 
 ## Features

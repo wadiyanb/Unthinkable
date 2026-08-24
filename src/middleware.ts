@@ -17,7 +17,6 @@ export default async function middleware(req: NextRequest) {
   const isPublicPath = publicPaths.some((path) => nextUrl.pathname.startsWith(path))
 
   if (isPublicPath) {
-    // If logged in and trying to access public auth pages, redirect to dashboard
     if (isLoggedIn && (nextUrl.pathname === '/login' || nextUrl.pathname === '/register')) {
       if (role === 'ADMIN') {
         return NextResponse.redirect(new URL('/admin', req.url))

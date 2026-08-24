@@ -1,10 +1,10 @@
-import NextAuth from 'next-auth'
+import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 import { Role } from '@prisma/client'
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -13,18 +13,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null
-        }
+        if (!credentials?.email || !credentials?.password) return null
 
         const user = await db.user.findUnique({
-          where: { email: credentials.email as string },
+          where: { email: credentials.email },
         })
 
         if (!user) return null
 
         const passwordMatch = await bcrypt.compare(
-          credentials.password as string,
+          credentials.password,
           user.passwordHash
         )
 
@@ -67,5 +65,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
-  trustHost: true,
-})
+}
+
+const handler = NextAuth(authOptions)
+
+// Compatibility shim: expose an auth() function that reads the server session
+// so existing server components don't need to change
+import { getServerSession } from 'next-auth'
+export async function auth() {
+  return getServerSession(authOptions)
+}
+
+export { handler }
+export default handler

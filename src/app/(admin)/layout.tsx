@@ -19,7 +19,7 @@ export default async function AdminLayout({
       <div className="hidden lg:flex">
         <Sidebar
           role="ADMIN"
-          userName={session.user.name}
+          userName={session.user.name ?? ''}
           flatNumber={session.user.flatNumber}
         />
       </div>
@@ -28,7 +28,7 @@ export default async function AdminLayout({
       <div className="lg:hidden w-full">
         <MobileNav
           role="ADMIN"
-          userName={session.user.name}
+          userName={session.user.name ?? ''}
           flatNumber={session.user.flatNumber}
         />
       </div>

@@ -41,7 +41,7 @@ export default async function ResidentDashboard() {
   const overdue = complaintsWithOverdue.filter((c) => c.isOverdue)
   const important = notices.filter((n) => n.isImportant)
 
-  const firstName = session.user.name.split(' ')[0]
+  const firstName = (session.user.name || 'Resident').split(' ')[0]
 
   return (
     <div className="p-6 max-w-4xl mx-auto">

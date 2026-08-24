@@ -19,7 +19,7 @@ export default async function ResidentLayout({
       <div className="hidden lg:flex">
         <Sidebar
           role="RESIDENT"
-          userName={session.user.name}
+          userName={session.user.name ?? ''}
           flatNumber={session.user.flatNumber}
         />
       </div>
@@ -28,7 +28,7 @@ export default async function ResidentLayout({
       <div className="lg:hidden w-full">
         <MobileNav
           role="RESIDENT"
-          userName={session.user.name}
+          userName={session.user.name ?? ''}
           flatNumber={session.user.flatNumber}
         />
       </div>

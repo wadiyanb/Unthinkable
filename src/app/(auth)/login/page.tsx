@@ -39,15 +39,8 @@ function LoginForm() {
         return
       }
 
-      // Fetch session to determine role for redirect
-      const res = await fetch('/api/auth/session')
-      const session = await res.json()
-      
-      if (session?.user?.role === 'ADMIN') {
-        router.push('/admin')
-      } else {
-        router.push(callbackUrl.startsWith('/admin') ? '/dashboard' : callbackUrl)
-      }
+      // Redirect to dashboard — middleware will route admins to /admin automatically
+      router.push('/dashboard')
       router.refresh()
     } catch {
       setError('Something went wrong. Please try again.')

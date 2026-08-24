@@ -27,11 +27,18 @@ function LoginForm() {
     setError('')
 
     try {
-      const result = await signIn('credentials', {
+      // Wrap signIn with a 15s timeout to avoid infinite buffering
+      const signInPromise = signIn('credentials', {
         email: data.email,
         password: data.password,
         redirect: false,
       })
+
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Sign in timed out. Check your connection.')), 15000)
+      )
+
+      const result = await Promise.race([signInPromise, timeoutPromise])
 
       if (result?.error) {
         setError('Invalid email or password. Please try again.')
@@ -42,8 +49,8 @@ function LoginForm() {
       // Redirect to dashboard — middleware will route admins to /admin automatically
       router.push('/dashboard')
       router.refresh()
-    } catch {
-      setError('Something went wrong. Please try again.')
+    } catch (err: any) {
+      setError(err?.message ?? 'Something went wrong. Please try again.')
       setLoading(false)
     }
   }
